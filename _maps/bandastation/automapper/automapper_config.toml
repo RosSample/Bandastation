@@ -30,7 +30,7 @@ trait_name = "CentCom"
 map_files = ["metastation_job_display_system.dmm"]
 directory = "_maps/bandastation/automapper/templates/metastation/"
 required_map = "MetaStation.dmm"
-coordinates = [210, 126, 1]
+coordinates = [212, 127, 1]
 trait_name = "Station"
 
 # Deltastation Job Display System
