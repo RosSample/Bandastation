@@ -1,5 +1,6 @@
 /obj/item/clothing/head/helmet
 	name = "helmet"
+	RU_NAMES_LIST_INIT("helmet", "шлем", "шлема", "шлему", "шлем", "шлемом", "шлеме")
 	desc = "Standard Security gear. Protects the head from impacts."
 	icon = 'icons/obj/clothing/head/helmet.dmi'
 	worn_icon = 'icons/mob/clothing/head/helmet.dmi'
@@ -645,7 +646,7 @@
 	take_damage(1, BRUTE, 0, 0)
 
 /obj/item/clothing/head/helmet/durability/watermelon
-	name = "Watermelon Helmet"
+	name = "watermelon helmet"
 	desc = "A helmet cut out from a watermelon. Might take a few hits, but don't expect it whitstand much."
 	icon_state = "watermelon"
 	inhand_icon_state = "watermelon"
@@ -677,8 +678,8 @@
 	wound = 5
 
 /obj/item/clothing/head/helmet/durability/holymelon
-	name = "Holymelon Helmet"
-	desc = "A helmet from a hollowed out holymelon. Might take a few hits, but don't expect it whitstand much."
+	name = "holymelon helmet"
+	desc = "A helmet from a hollowed out holymelon. Might take a few hits, but don't expect it to withstand much."
 	icon_state = "holymelon"
 	inhand_icon_state = "holymelon"
 	flags_inv = HIDEEARS
@@ -713,7 +714,7 @@
 	take_damage(8, BRUTE, 0, 0)
 
 /obj/item/clothing/head/helmet/durability/barrelmelon
-	name = "Barrelmelon Helmet"
+	name = "barrelmelon helmet"
 	desc = "A helmet from hollowed out barrelmelon. As sturdy as if made from actual wood, though its rigid structure makes it break up quicker."
 	icon_state = "barrelmelon"
 	inhand_icon_state = "barrelmelon"

@@ -51,8 +51,8 @@
 	if (length(status_examines))
 		. += status_examines
 
-	if(get_bodypart(BODY_ZONE_HEAD) && !get_organ_by_type(/obj/item/organ/internal/brain))
-		. += span_deadsay("Кажется, [t_his] мозг отсутствует...")
+	if(get_bodypart(BODY_ZONE_HEAD) && !get_organ_by_type(/obj/item/organ/brain))
+		. += span_deadsay("It appears that [t_his] brain is missing...")
 
 	var/list/missing = list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 	var/list/disabled = list()
@@ -167,7 +167,7 @@
 			var/bleed_text = "<b>"
 			if(appears_dead)
 				bleed_text += "<span class='deadsay'>"
-				bleed_text += "Видна кровь из [t_his] открытых "
+				bleed_text += "Blood is visible in [t_his] open "
 			else
 				bleed_text += "<span class='warning'>"
 				bleed_text += "[t_He] кровоточит из "
@@ -220,9 +220,12 @@
 				if (bodytemperature < dna.species.bodytemp_cold_damage_limit)
 					. += "[t_He] дрожит."
 				if(HAS_TRAIT(src, TRAIT_EVIL))
-					. += "[t_His] глаза излучают безчувственную, холодную отстраненность. В [t_his] душе нет ничего, кроме тьмы."
-					living_user.add_mood_event("encountered_evil", /datum/mood_event/encountered_evil)
-					living_user.set_jitter_if_lower(15 SECONDS)
+					. += "[t_His] eyes radiate with a unfeeling, cold detachment. There is nothing but darkness within [t_his] soul."
+					if(living_user.mind?.holy_role >= HOLY_ROLE_PRIEST)
+						. += span_warning("PERFECT FOR SMITING!!")
+					else
+						living_user.add_mood_event("encountered_evil", /datum/mood_event/encountered_evil)
+						living_user.set_jitter_if_lower(15 SECONDS)
 
 			if(HAS_TRAIT(user, TRAIT_SPIRITUAL) && mind?.holy_role)
 				. += "Вокруг [ru_p_theirs()] видно святую ауру."
@@ -235,11 +238,14 @@
 				. += span_notice("[t_He] едва находится в сознании.")
 			if(CONSCIOUS)
 				if(HAS_TRAIT(src, TRAIT_DUMB))
-					. += "У [ru_p_theirs()] глупое выражение лица."
-		if(get_organ_by_type(/obj/item/organ/internal/brain) && isnull(ai_controller))
+					. += "[t_He] [t_has] a stupid expression on [t_his] face."
+		var/obj/item/organ/brain/brain = get_organ_by_type(/obj/item/organ/brain)
+		if(brain && isnull(ai_controller))
 			var/npc_message = ""
-			if(!key)
-				npc_message = "[t_He] в полной кататонии. Стресс, связанный с жизнью в глубоком космосе, видимо, переселил [t_him]. Восстановление маловероятно."
+			if(HAS_TRAIT(brain, TRAIT_GHOSTROLE_ON_REVIVE))
+				npc_message = "Soul is pending..."
+			else if(!key)
+				npc_message = "[t_He] [t_is] totally catatonic. The stresses of life in deep-space must have been too much for [t_him]. Any recovery is unlikely."
 			else if(!client)
 				npc_message ="У [ru_p_theirs()] пустой и рассеянный взгляд и, кажется, [ru_p_they()] совершенно ни на что не реагирует. [t_He], возможно, скоро опомнится."
 			if(npc_message)
@@ -269,7 +275,7 @@
 		. += span_warning("Это тело превратилось в гротескную шелуху.")
 	if(HAS_MIND_TRAIT(user, TRAIT_MORBID))
 		if(HAS_TRAIT(src, TRAIT_DISSECTED))
-			. += span_notice("Препарирование, похоже, уже было проведено. Бесполезно для обследования... <b><i>пока что.</i></b>")
+			. += span_notice("[t_He] appear[p_s()] to have been dissected. Useless for examination... <b><i>for now.</i></b>")
 		if(HAS_TRAIT(src, TRAIT_SURGICALLY_ANALYZED))
 			. += span_notice("A skilled hand has mapped this one's internal intricacies. It will be far easier to perform future experimentations upon [user.p_them()]. <b><i>Exquisite.</i></b>")
 	if(HAS_MIND_TRAIT(user, TRAIT_EXAMINE_FITNESS))
@@ -314,10 +320,15 @@
 	var/t_his = ru_p_them()
 	// var/t_is = p_are()
 	//This checks to see if the body is revivable
-	if(get_organ_by_type(/obj/item/organ/internal/brain) && (client || HAS_TRAIT(src, TRAIT_MIND_TEMPORARILY_GONE) || (ghost?.can_reenter_corpse && ghost?.client)))
-		return span_deadsay("[t_He] выглядит обмякло и не реагирует; нет признаков жизни...")
-	else
-		return span_deadsay("[t_He] выглядит обмякло и не реагирует; нет признаков жизни, и [t_his] душа ушла...")
+	var/obj/item/organ/brain = get_organ_by_type(/obj/item/organ/brain)
+	if(brain && HAS_TRAIT(brain, TRAIT_GHOSTROLE_ON_REVIVE))
+		return span_deadsay("[t_He] [t_is] limp and unresponsive; but [t_his] soul might yet come back...")
+	var/client_like = client || HAS_TRAIT(src, TRAIT_MIND_TEMPORARILY_GONE)
+	var/valid_ghost = ghost?.can_reenter_corpse && ghost?.client
+	var/valid_soul = brain || !HAS_TRAIT(src, TRAIT_FAKE_SOULLESS)
+	if((brain && client_like) || (valid_ghost && valid_soul))
+		return span_deadsay("[t_He] [t_is] limp and unresponsive; there are no signs of life...")
+	return span_deadsay("[t_He] [t_is] limp and unresponsive; there are no signs of life and [t_his] soul has departed...")
 
 /// Returns a list of "damtype" => damage description based off of which bodypart description is most common
 /mob/living/carbon/proc/get_majority_bodypart_damage_desc()
@@ -508,7 +519,7 @@
 	. = list()
 
 	var/list/cybers = list()
-	for(var/obj/item/organ/internal/cyberimp/cyberimp in organs)
+	for(var/obj/item/organ/cyberimp/cyberimp in organs)
 		if(IS_ROBOTIC_ORGAN(cyberimp) && !(cyberimp.organ_flags & ORGAN_HIDDEN))
 			cybers += cyberimp.examine_title(user)
 	if(length(cybers))
