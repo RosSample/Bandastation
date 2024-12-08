@@ -204,6 +204,14 @@ export const NtosRobotactContent = (props) => {
                         onClick={() => act('toggleSensors')}
                       />
                     </LabeledList.Item>
+                    {/* BANDASTATION ADDITION START borg_voice_change */}
+                    <LabeledList.Item label="Change Voice">
+                      <Button
+                        content="SELECT"
+                        onClick={() => act('changeVoice')}
+                      />
+                    </LabeledList.Item>
+                    {/* BANDASTATION ADDITION END */}
                     <LabeledList.Item
                       label={'Stored Photos (' + printerPictures + ')'}
                     >

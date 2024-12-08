@@ -160,6 +160,11 @@
 		if("toggleSensors")
 			cyborg.toggle_sensors()
 
+		// BANDASTATION ADDITION START borg_voice_change
+		if("changeVoice")
+			cyborg.change_tts_seed()
+		// BANDASTATION ADDITION END
+
 		if("viewImage")
 			if(cyborg.connected_ai)
 				cyborg.connected_ai.aicamera?.viewpictures(usr)

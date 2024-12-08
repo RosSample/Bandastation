@@ -185,6 +185,6 @@
 
 // Component usage
 
-/mob/living/silicon/Initialize(mapload)
-	. = ..()
-	GRANT_ACTION(/datum/action/innate/voice_change/genderless/robotic)
+// /mob/living/silicon/Initialize(mapload)
+// 	. = ..()
+// 	GRANT_ACTION(/datum/action/innate/voice_change/genderless/robotic)
